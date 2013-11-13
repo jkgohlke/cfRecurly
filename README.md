@@ -3,6 +3,8 @@ cfRecurly
 
 A fork of the obsolete cfRecurly library which allows interaction with the Recurly API from within ColdFusion. 
 
+This library has been refactored nearly entirely with an object oriented paradigm in mind and therefore is not backward-compatible with the original cfRecurly.
+
 Features
 --------
 
