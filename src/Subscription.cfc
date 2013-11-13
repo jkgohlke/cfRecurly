@@ -292,7 +292,7 @@
                 returntype="struct">
         <cfargument name="objAccount" type="Account" required="true">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset var strXML = generateCreateXML( Arguments.objAccount )>
             <cfset stAPICall = Variables.API.post("subscriptions", strXML)>
@@ -308,7 +308,7 @@
                 returntype="struct">
         <cfargument name="timeframe" type="string" required="true" hint="now|renewal">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset var strXML = generateUpdateXML( Arguments.timeframe )>
             <cfset var stAPICall = Variables.API.put("subscriptions/#Variables.fields["id"]#", strXML)>
@@ -324,7 +324,7 @@
                 returntype="struct">
         <cfargument name="SubscriptionId" type="string" required="false" default="#Variables.fields["id"]#">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Arguments.SubscriptionId ) GT 0>
             <cfset stAPICall = Variables.API.get("subscriptions/#Arguments.SubscriptionId#")>
             <!--- TODO: Handle other errors --->
@@ -339,7 +339,7 @@
                 output="true"
                 returntype="struct" >
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.put("subscriptions/#Variables.fields["id"]#/cancel")>
             <!--- TODO: Handle errors --->
@@ -353,7 +353,7 @@
                 output="true"
                 returntype="struct" >
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.put("subscriptions/#Variables.fields["id"]#/reactivate")>
             <!--- TODO: Handle errors --->
@@ -368,7 +368,7 @@
                 returntype="struct" >
         <cfargument name="strRefundType" type="string" required="true" hint="partial|full|none">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.put( "subscriptions/#Variables.fields["id"]#/terminate", { refund = Arguments.strRefundType } )>
             <!--- TODO: Handle errors --->
@@ -385,7 +385,7 @@
 
         <cfset Arguments.dtNextRenewal = Variables.API.GetIsoTimeString( Arguments.dtNextRenewal )>
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.put("subscriptions/#Variables.fields["id"]#/postpone", { next_renewal_date = Arguments.dtNextRenewal })>
             <!--- TODO: Handle errors --->

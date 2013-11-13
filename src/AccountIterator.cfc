@@ -59,7 +59,7 @@
                 output="false"
                 returntype="array">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
 
         <cfif Variables.returnCachedOnNextCall>
             <cfset stAPICall = Variables.stLastReponse>

@@ -272,7 +272,7 @@
                 output="true"
                 returntype="struct">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset var strXML = generateXML( true )>
             <cfset stAPICall = Variables.API.post("accounts", strXML)>
@@ -287,7 +287,7 @@
                 output="true"
                 returntype="struct">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset var strXML = generateXML( false )>
             <cfset stAPICall = Variables.API.put("accounts/#Variables.fields["id"]#", strXML)>
@@ -303,7 +303,7 @@
                 returntype="struct">
         <cfargument name="AccountId" type="string" required="false" default="#Variables.fields["id"]#">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Arguments.AccountId ) GT 0>
             <cfset stAPICall = Variables.API.get("accounts/#Arguments.AccountId#")>
             <!--- TODO: Handle errors --->
@@ -317,7 +317,7 @@
                 output="true"
                 returntype="struct">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.delete("accounts/#Variables.fields["id"]#")>
             <!--- TODO: Handle errors --->
@@ -331,7 +331,7 @@
                 output="true"
                 returntype="struct">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.put("accounts/#Variables.fields["id"]#/reopen")>
             <!--- TODO: Handle errors --->
@@ -346,7 +346,7 @@
                 returntype="array">
 
         <cfif len( Variables.fields["id"] ) GT 0>
-            <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+            <cfset var stAPICall = { data = "", headers = {}, status = ""} >
             <cfset stAPICall = Variables.API.get("accounts/#Variables.fields["id"]#/subscriptions")>
             <!--- TODO: Handle errors --->
 

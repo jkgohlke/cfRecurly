@@ -290,7 +290,7 @@
                 returntype="struct">
         <cfargument name="AccountId" type="string" required="false" default="#Variables.fields["id"]#">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Arguments.AccountId ) GT 0>
             <cfset stAPICall = Variables.API.get("accounts/#Arguments.AccountId#/billing_info")>
             <!--- TODO: Handle other errors --->
@@ -305,7 +305,7 @@
                 output="true"
                 returntype="struct" >
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset stAPICall = Variables.API.delete("accounts/#Variables.fields["id"]#/billing_info")>
             <!--- TODO: Handle errors --->
