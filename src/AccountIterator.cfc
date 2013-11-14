@@ -16,11 +16,12 @@
 
 <cfcomponent displayname="cfRecurly.AccountIterator" output="false">
     <cfset Variables.API = "">
-    <cfset Variables.stLastReponse = {}>
+    <cfset Variables.Util = createObject( "APIUtil" )>
+    <cfset Variables.stLastReponse = { data = "", headers = {}, status = "" }>
     <cfset Variables.strStateFilter = "">
     <cfset Variables.iPerPage = "">
 
-    <cfset Variables.cursorRegex = "[?|&]?cursor=([0-9]+)">
+    <cfset Variables.cursorRegex = '[?|&]?cursor=([0-9\-]+).*>; rel="next"'>
     <cfset Variables.hasNextRegex = 'rel="next"'>
 
     <cfset Variables.objAccount = createObject( "Account" )>
@@ -32,8 +33,8 @@
 
     <cffunction name="init" access="public" output="true" hint="Constructor">
         <cfargument name="API" required="true">
-        <cfargument name="stateFilter" required="false" default="active">
-        <cfargument name="perPage" required="false" default="20">
+        <cfargument name="stateFilter" required="false" default="active" type="string">
+        <cfargument name="perPage" required="false" default="20" type="numeric">
 
         <cfset Variables.API = Arguments.API>
         <cfset Variables.strStateFilter = Arguments.stateFilter>
@@ -47,8 +48,13 @@
                 output="false"
                 returntype="boolean">
         <cfif Variables.checkedForNext EQ false>
-            <cfset next()>
-            <cfset Variables.returnCachedOnNextCall = true>
+            <cfset var arrRet = next()>
+            <cfif Variables.checkedForNext>
+                <cfset Variables.returnCachedOnNextCall = true>
+                <cfif arraylen( arrRet ) GT 0>
+                    <cfreturn true>
+                </cfif>
+            </cfif>
         </cfif>
 
         <cfreturn Variables.hasNext>
@@ -59,20 +65,20 @@
                 output="false"
                 returntype="array">
 
-        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
+        <cfset var stAPICall = { data = "", headers = {}, status = ""}>
 
         <cfif Variables.returnCachedOnNextCall>
             <cfset stAPICall = Variables.stLastReponse>
             <cfset Variables.returnCachedOnNextCall = false>
         <cfelse>
-            <cfif structIsEmpty( Variables.stLastReponse )>
+            <cfif Variables.Util.areFieldsEmpty( Variables.stLastReponse )>
                 <cfset stAPICall = Variables.API.get("accounts", { "state" = Variables.strStateFilter, "per_page" = Variables.iPerPage })>
             <cfelse>
                 <!--- NOTE: Obviously this is not RFC-5988 compliant... -J --->
                 <cfset var strLink = isDefined("Variables.stLastReponse.headers.Link") ? Variables.stLastReponse.headers.Link : "">
                 <cfset var cursor = "">
                 <cfif len( strLink )>
-                    <cfset arrFound = Variables.API.FindWithRegex( Variables.cursorRegex, strLink )>
+                    <cfset arrFound = Variables.Util.FindWithRegex( Variables.cursorRegex, strLink )>
                     <cfif arraylen(arrFound) GT 1>
                         <cfset cursor = arrFound[2]>
                     </cfif>

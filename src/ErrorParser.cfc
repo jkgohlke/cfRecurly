@@ -15,6 +15,7 @@
 --->
 
 <cfcomponent displayname="cfRecurly.ErrorParser" hint="Converts recurly API errors into an easily interactable form" output="false">
+    <cfset Variables.Util = createObject( "APIUtil" )>
     <!--- TODO: Implement -J --->
 </cfcomponent>
 

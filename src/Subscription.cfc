@@ -17,6 +17,7 @@
 
 <cfcomponent displayname="cfRecurly.Subscription" hint="Represents a subscription in the recurly system" output="false">
     <cfset Variables.API = "">
+    <cfset Variables.Util = createObject( "APIUtil" )>
     <cfset Variables.defaultFields = {
          id = ""
         ,account_id = ""
@@ -61,7 +62,7 @@
                 returntype="Subscription">
         <cfargument name="fields" type="struct" required="true">
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Arguments.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Arguments.fields )>
         <cfreturn this>
     </cffunction>
 
@@ -95,30 +96,6 @@
         <cfreturn this>
     </cffunction>
 
-    <cffunction name="areFieldsEmpty"
-                access="private"
-                output="false"
-                returntype="boolean">
-        <cfargument name="fields" type="struct" required="true">
-
-        <cfset var isEmpty = true>
-
-        <cfif not structIsEmpty( Arguments.fields )>
-            <cfloop list="#structKeyList( Arguments.fields )#" index="fieldName">
-                <cfif fieldName EQ "id">
-                    <cfcontinue>
-                </cfif>
-                <cfset fieldValue = Arguments.fields[ fieldName ]>
-                <cfif len( fieldValue )>
-                    <cfset isEmpty = false>
-                    <cfbreak>
-                </cfif>
-            </cfloop>
-        </cfif>
-
-        <cfreturn isEmpty>
-    </cffunction>
-
     <cffunction name="isEmpty"
                 access="public"
                 output="false"
@@ -127,7 +104,7 @@
         <cfset var empty = true>
 
         <cfif isDefined("Variables.fields") AND not structIsEmpty( Variables.fields )>
-            <cfset empty = areFieldsEmpty( Variables.fields )>
+            <cfset empty = Variables.Util.areFieldsEmpty( Variables.fields )>
         </cfif>
 
         <cfreturn empty>
@@ -139,7 +116,7 @@
                 returntype="string">
         <cfargument name="objAccount" type="Account" required="true">
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Variables.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Variables.fields )>
 
         <cfset var strXML = "">
         <cfsavecontent variable="strXML"><?xml version="1.0"?>
@@ -202,7 +179,7 @@
             <cfthrow type="cfRecurly" message="Invalid value '#Arguments.timeframe#' for parameter 'timeframe' for function 'generateUpdateXML'."/>
         </cfif>
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Variables.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Variables.fields )>
 
         <cfset var strXML = "">
         <cfsavecontent variable="strXML"><?xml version="1.0"?>
@@ -255,10 +232,10 @@
         <cfset var xoResultNode = xmlParse( Arguments.xmlText )>
         <cfif isDefined( "xoResultNode.subscription" )>
             <cfset var xoSubscription = xoResultNode.subscription>
-            <cfset var accountIdUrl = isDefined("xoSubscription.account.XmlText") ? xoSubscription.account.XmlText : "">
+            <cfset var accountIdUrl = isDefined("xoTransaction.account.XmlAttributes.href") ? xoTransaction.account.XmlAttributes.href : "">
             <cfset var accountId = "">
             <cfif len( accountIdUrl )>
-                <cfset arrFound = Variables.API.FindWithRegex( Variables.accountIdRegex, accountIdUrl )>
+                <cfset arrFound = Variables.Util.FindWithRegex( Variables.accountIdRegex, accountIdUrl )>
                 <cfif arraylen(arrFound) GT 1>
                     <cfset accountId = arrFound[2]>
                 </cfif>
@@ -328,7 +305,7 @@
         <cfif len( Arguments.SubscriptionId ) GT 0>
             <cfset stAPICall = Variables.API.get("subscriptions/#Arguments.SubscriptionId#")>
             <!--- TODO: Handle other errors --->
-            <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
+            <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
             <cfset Variables.fields["id"] = Arguments.SubscriptionId>
         </cfif>
         <cfreturn stAPICall>

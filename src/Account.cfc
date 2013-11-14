@@ -17,6 +17,7 @@
 
 <cfcomponent displayname="cfRecurly.Account" hint="Represents an account in the recurly system" output="false">
     <cfset Variables.API = "">
+    <cfset Variables.Util = createObject( "APIUtil" )>
     <cfset Variables.defaultFields = {
          id = ""
         ,username = ""
@@ -40,8 +41,6 @@
 
     <cfset Variables.fields = duplicate( Variables.defaultFields )>
 
-    <cfset Variables.objSubscription = createObject( "Subscription" )>
-
     <cffunction name="init" access="public" output="true" hint="Constructor">
         <cfargument name="API" required="true">
         <cfargument name="AccountId" type="any" required="false" default="">
@@ -63,7 +62,7 @@
                 returntype="Account">
         <cfargument name="fields" type="struct" required="true">
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Arguments.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Arguments.fields )>
         <cfreturn this>
     </cffunction>
 
@@ -106,30 +105,6 @@
         <cfreturn this>
     </cffunction>
 
-    <cffunction name="areFieldsEmpty"
-                access="private"
-                output="false"
-                returntype="boolean">
-        <cfargument name="fields" type="struct" required="true">
-
-        <cfset var isEmpty = true>
-
-        <cfif not structIsEmpty( Arguments.fields )>
-            <cfloop list="#structKeyList( Arguments.fields )#" index="fieldName">
-                <cfif fieldName EQ "id">
-                    <cfcontinue>
-                </cfif>
-                <cfset fieldValue = Arguments.fields[ fieldName ]>
-                <cfif len( fieldValue )>
-                    <cfset isEmpty = false>
-                    <cfbreak>
-                </cfif>
-            </cfloop>
-        </cfif>
-
-        <cfreturn isEmpty>
-    </cffunction>
-
     <cffunction name="isEmpty"
                 access="public"
                 output="false"
@@ -138,7 +113,7 @@
         <cfset var empty = true>
 
         <cfif isDefined("Variables.fields") AND not structIsEmpty( Variables.fields )>
-            <cfset empty = areFieldsEmpty( Variables.fields )>
+            <cfset empty = Variables.Util.areFieldsEmpty( Variables.fields )>
         </cfif>
 
         <cfreturn empty>
@@ -150,7 +125,7 @@
                 returntype="string">
         <cfargument name="addId" type="boolean" required="true">
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Variables.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Variables.fields )>
 
         <cfset var strXML = "">
         <cfsavecontent variable="strXML">
@@ -180,7 +155,7 @@
                 <company_name>#XmlFormat( Variables.fields["company_name"], true )#</company_name>
                 </cfif>
 
-                <cfif NOT areFieldsEmpty( Variables.fields.address )>
+                <cfif NOT Variables.Util.areFieldsEmpty( Variables.fields.address )>
                 <address>
                     <cfif len( Variables.fields.address["address1"] ) GT 0>
                     <address1>#XmlFormat( Variables.fields.address["address1"], true )#</address1>
@@ -218,7 +193,7 @@
                 returntype="string">
         <cfargument name="addId" type="boolean" required="true">
 
-        <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, Variables.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, Variables.fields )>
         
         <cfset var strXML = "">
         <cfsavecontent variable="strXML"><?xml version="1.0"?>
@@ -307,7 +282,7 @@
         <cfif len( Arguments.AccountId ) GT 0>
             <cfset stAPICall = Variables.API.get("accounts/#Arguments.AccountId#")>
             <!--- TODO: Handle errors --->
-            <cfset Variables.fields = Variables.API.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
+            <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
         </cfif>
         <cfreturn stAPICall>
     </cffunction>
@@ -343,30 +318,16 @@
     <cffunction name="getSubscriptions"
                 access="public"
                 output="false"
-                returntype="array">
+                returntype="AccountSubscriptionIterator">
 
-        <cfif len( Variables.fields["id"] ) GT 0>
-            <cfset var stAPICall = { data = "", headers = {}, status = ""} >
-            <cfset stAPICall = Variables.API.get("accounts/#Variables.fields["id"]#/subscriptions")>
-            <!--- TODO: Handle errors --->
+        <cfreturn new AccountSubscriptionIterator( API = Variables.API, Account = this )>
+    </cffunction>
 
-            <cfset var arrRet = []>
+    <cffunction name="getTransactions"
+                access="public"
+                output="true"
+                returntype="AccountTransactionIterator">
 
-            <cfif len( stAPICall["data"] )>
-                <cfset var xoResultNode = xmlParse( stAPICall["data"] )>
-                <cfif isDefined( "xoResultNode.subscriptions" )>
-                    <cfset var xoSubscriptions = xoResultNode.subscriptions>
-                    <cfloop index="idx" from="1" to="#ArrayLen(xoSubscriptions.XmlChildren)#">
-                        <cfset var xoSubscription = xoSubscriptions.XmlChildren[ idx ]>
-                        <cfset var stSubscription = Variables.objSubscription.parseXML( toString( xoSubscription ) )>
-                        <cfset stSubscription["account_id"] = Variables.fields["id"]>
-                        <cfset arrayAppend( arrRet, new Subscription( Variables.API, stSubscription ) )>
-                    </cfloop>
-                </cfif>
-            </cfif>
-
-            <cfreturn arrRet>
-        </cfif>
-        <cfreturn []>
+        <cfreturn new AccountTransactionIterator( API = Variables.API, Account = this )>
     </cffunction>
 </cfcomponent>
