@@ -178,7 +178,7 @@
             </cfif>
             <cfset newFields = {
                  id = isDefined("xoTransaction.uuid.XmlText") ? xoTransaction.uuid.XmlText : ""
-                ,account_id = ""
+                ,account_id = accountId
                 ,type = isDefined("xoTransaction.XmlAttributes.type") ? xoTransaction.XmlAttributes.type : ""
                 ,action = isDefined("xoTransaction.action.XmlText") ? xoTransaction.action.XmlText : ""
                 ,amount_in_cents = isDefined("xoTransaction.amount_in_cents.XmlText") ? xoTransaction.amount_in_cents.XmlText : ""
