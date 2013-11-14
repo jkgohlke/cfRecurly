@@ -197,7 +197,6 @@
                 ,avs_result_street = isDefined("xoTransaction.avs_result_street.XmlText") ? xoTransaction.avs_result_street.XmlText : ""
                 ,avs_result_postal = isDefined("xoTransaction.avs_result_postal.XmlText") ? xoTransaction.avs_result_postal.XmlText : ""
                 ,created_at = isDefined("xoTransaction.created_at.XmlText") ? xoTransaction.created_at.XmlText : ""
-
                 ,cached_account_details = isDefined("xoTransaction.details.account") ? Variables.objAccount.parseXML( ToString( xoTransaction.details.account ) ) : {}
                 ,cached_billing_details = isDefined("xoTransaction.details.account.billing_info") ? Variables.objBillingInfo.parseXML( ToString( xoTransaction.details.account.billing_info ) ) : {}
             }>
