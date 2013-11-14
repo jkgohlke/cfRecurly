@@ -169,7 +169,6 @@
         <cfif isDefined( "xoResultNode.transaction" )>
             <cfset var xoTransaction = xoResultNode.transaction>
             <cfset var accountIdUrl = isDefined("xoTransaction.account.XmlAttributes.href") ? xoTransaction.account.XmlAttributes.href : "">
-            <cfdump var="#accountIdUrl#">
             <cfset var accountId = "">
             <cfif len( accountIdUrl )>
                 <cfset arrFound = Variables.Util.FindWithRegex( Variables.accountIdRegex, accountIdUrl )>
