@@ -13,7 +13,7 @@ Name | Status | Details
 Accounts | Complete | 
 Billing Info | Complete |
 Subscriptions | Partial | No Add-Ons/Manual Invoicing
-Transactions | Unavailable | In Development
+Transactions | Complete |
 Adjustments | Unavailable | Unplanned
 Coupons | Unavailable | Unplanned
 Coupon Redemptions | Unavailable | Unplanned
