@@ -73,7 +73,7 @@
                 returntype="Subscription">
         <cfargument name="fields" type="struct" required="true">
 
-        <cfset Variables.fields = structAppend( Variables.fields, Arguments.fields )>
+        <cfset Variables.fields = Variables.Util.StructExtend( Variables.fields, Arguments.fields )>
         <cfreturn this>
     </cffunction>
 
