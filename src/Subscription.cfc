@@ -273,6 +273,7 @@
         <cfif len( Variables.fields["id"] ) GT 0>
             <cfset var strXML = generateCreateXML( Arguments.objAccount )>
             <cfset stAPICall = Variables.API.post("subscriptions", strXML)>
+            <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
             <!--- TODO: Handle errors --->
             <cfset refresh()>
         </cfif>

@@ -134,6 +134,10 @@
                 <account>
                     <account_code>#XmlFormat( Variables.fields["account_id"], true )#</account_code>
                 </account>
+                <cfelseif len( Arguments.objAccount.get()["id"] ) GT 0>
+                <account>
+                    <account_code>#XmlFormat( Arguments.objAccount.get()["id"], true )#</account_code>
+                </account>
                 </cfif>
 
                 <cfif len( Variables.fields["amount_in_cents"] ) GT 0>
@@ -211,9 +215,10 @@
         <cfargument name="objAccount" type="Account" required="true">
 
         <cfset var stAPICall = { data = "", headers = {}, status = ""} >
-        <cfif len( Variables.fields["id"] ) GT 0>
+        <cfif len( Arguments.objAccount.get()["id"] ) GT 0>
             <cfset var strXML = generateCreateXML( Arguments.objAccount )>
             <cfset stAPICall = Variables.API.post("transactions", strXML)>
+            <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>
             <!--- TODO: Handle errors --->
             <cfset refresh()>
         </cfif>
