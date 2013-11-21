@@ -194,4 +194,10 @@
 
         <cfreturn ( dateFormat( Arguments.dtOriginal, "yyyy-mm-dd" ) & "T" & timeFormat( Arguments.dtOriginal, "HH:mm:ss" ) & "Z" )>
     </cffunction>
+
+    <cffunction name="ISOToDateTime" access="package" returntype="date" output="false">
+        <cfargument name="strIsoTimeString" type="string" required="true">
+
+        <cfreturn parseDateTime( Arguments.strIsoTimeString.ReplaceFirst( "^.*?(\d{4})-?(\d{2})-?(\d{2})T([\d:]+).*$", "$1-$2-$3 $4" ) )>
+    </cffunction>
 </cfcomponent>
