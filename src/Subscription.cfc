@@ -34,6 +34,10 @@
         ,current_period_ends_at = ""
         ,trial_started_at = ""
         ,trial_ends_at = ""
+        ,coupon_code = ""
+        ,starts_at = ""
+        ,first_renewal_date = ""
+        ,total_billing_cycles = ""
         <!---,subscription_add_ons = []--->
     }>
 
@@ -220,7 +224,7 @@
 
     <cffunction name="parseXML"
                 access="package"
-                output="false"
+                output="true"
                 returntype="struct">
         <cfargument name="xmlText" type="string" required="true">
 
@@ -232,7 +236,7 @@
         <cfset var xoResultNode = xmlParse( Arguments.xmlText )>
         <cfif isDefined( "xoResultNode.subscription" )>
             <cfset var xoSubscription = xoResultNode.subscription>
-            <cfset var accountIdUrl = isDefined("xoTransaction.account.XmlAttributes.href") ? xoTransaction.account.XmlAttributes.href : "">
+            <cfset var accountIdUrl = isDefined("xoSubscription.account.XmlAttributes.href") ? xoSubscription.account.XmlAttributes.href : "">
             <cfset var accountId = "">
             <cfif len( accountIdUrl )>
                 <cfset arrFound = Variables.Util.FindWithRegex( Variables.accountIdRegex, accountIdUrl )>
@@ -270,7 +274,7 @@
         <cfargument name="objAccount" type="Account" required="true">
 
         <cfset var stAPICall = { data = "", headers = {}, status = ""} >
-        <cfif len( Variables.fields["id"] ) GT 0>
+        <cfif len( Arguments.objAccount.get()["id"] ) GT 0>
             <cfset var strXML = generateCreateXML( Arguments.objAccount )>
             <cfset stAPICall = Variables.API.post("subscriptions", strXML)>
             <cfset Variables.fields = Variables.Util.StructExtend( Variables.defaultFields, parseXML(stAPICall["data"]) )>

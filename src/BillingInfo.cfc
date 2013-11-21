@@ -252,9 +252,10 @@
                 output="true"
                 returntype="struct">
 
+        <cfset var stAPICall = { data = "", headers = {}, status = ""} >
         <cfset var strXML = generateXML()>
         <cfif len( Variables.fields["id"] ) GT 0>
-            <cfset var stAPICall = Variables.API.put("accounts/#Variables.fields["id"]#/billing_info", strXML)>
+            <cfset stAPICall = Variables.API.put("accounts/#Variables.fields["id"]#/billing_info", strXML)>
             <!--- TODO: Handle errors --->
             <cfset refresh()>
         </cfif>
