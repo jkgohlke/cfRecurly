@@ -25,6 +25,7 @@
         ,first_name = ""
         ,last_name = ""
         ,company_name = ""
+        ,hosted_login_token = ""
         ,address = {
              address1 = ""
             ,address2 = ""
@@ -233,6 +234,7 @@
                     ,country_id = isDefined("xoAccount.address.country.XmlText") ? xoAccount.address.country.XmlText : ""
                     ,phone = isDefined("xoAccount.address.phone.XmlText") ? xoAccount.address.phone.XmlText : ""
                 }
+                ,hosted_login_token = isDefined("xoAccount.hosted_login_token.XmlText") ? xoAccount.hosted_login_token.XmlText : ""
 
                 <!--- Read-Only --->
                 ,state = isDefined("xoAccount.state.XmlText") ? xoAccount.state.XmlText : ""
